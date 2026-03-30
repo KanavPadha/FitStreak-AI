@@ -1,61 +1,195 @@
-# Fitness & Nutrition AI App
+# 🚀 FitStreak AI – Smart Fitness & Nutrition Platform
 
-This is a full-stack application built with React, Vite, Express, and Google Gemini AI.
+## 💡 Project Overview
 
-## Features
+**FitStreak AI** is a modern AI-powered fitness and nutrition platform that combines **web development fundamentals**, **LLM integration**, and **real-world software engineering practices** to deliver a smart, interactive health experience.
 
-- **BMI Calculator**: Calculate your Body Mass Index and get AI-powered health advice.
-- **Meal Calculator**: Estimate calories and macronutrients from food descriptions using AI.
-- **AI Trainer**: Get personalized workout plans and fitness advice.
-- **Exercise Library**: Explore a collection of exercises with AI-generated details.
+This project demonstrates how a developer can evolve from **basic web development knowledge → to building a real-world AI SaaS-style application**.
 
-## Prerequisites
+---
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [npm](https://www.npmjs.com/)
-- A Google Gemini API Key (Get one at [Google AI Studio](https://aistudio.google.com/app/apikey))
+## 🧠 How This Project Was Built
 
-## Getting Started
+This project is not just about features — it represents a **learning journey + real-world implementation**.
 
-1. **Clone the repository** (if you haven't already):
-   ```bash
-   # If you downloaded the ZIP, just extract it and open the folder in VS Code
-   ```
+### 🔹 1. Web Development Fundamentals
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+* Built using **React + Vite**
+* Component-based architecture
+* Modern UI with Tailwind CSS
+* State management and API integration
 
-3. **Set up environment variables**:
-   - Open the `.env` file in the root directory.
-   - Add your Gemini API Key to the `VITE_GEMINI_API_KEY` variable.
+---
 
-4. **Authorize Localhost in Firebase (Crucial for Login)**:
-   - Go to the [Firebase Console](https://console.firebase.google.com/).
-   - Select your project.
-   - Go to **Authentication** > **Settings** > **Authorized domains**.
-   - Click **Add domain** and enter `localhost`.
-   - This allows the Google Sign-In popup to work on your local machine.
+### 🔹 2. Software Development Lifecycle (SDLC)
 
-5. **Run the application**:
-   ```bash
-   npm run dev
-   ```
+Applied structured development approach:
 
-5. **Open the app**:
-   - Navigate to `http://localhost:3000` in your browser.
+* Requirement analysis
+* Feature planning
+* Iterative development
+* Debugging & testing
+* UI/UX improvements
+* Final optimization
 
-## Project Structure
+---
 
-- `src/`: Frontend React application.
-- `server.ts`: Backend Express server with Vite middleware.
-- `vite.config.ts`: Vite configuration.
-- `tailwind.config.ts`: Tailwind CSS configuration.
+### 🔹 3. AI + LLM Integration
 
-## Scripts
+* Integrated **Google Gemini (LLM)**
+* Implemented **prompt engineering techniques**
+* Designed AI for:
 
-- `npm run dev`: Starts the development server (Frontend + Backend).
-- `npm run build`: Builds the application for production.
-- `npm run start`: Starts the production server (after building).
-- `npm run lint`: Runs TypeScript type checking.
+  * Fitness recommendations
+  * BMI-based suggestions
+  * Nutrition insights
+  * AI trainer chat
+
+---
+
+### 🔹 4. Google AI Studio Usage
+
+* Generated and managed API keys
+* Tested LLM outputs
+* Debugged API errors (invalid keys, request formats)
+* Optimized prompts for better responses
+
+---
+
+### 🔹 5. Real-World Problem Solving
+
+This project involved solving actual developer challenges:
+
+* Environment variable handling (`.env`)
+* API integration errors
+* SDK vs REST differences
+* TypeScript debugging
+* Frontend + AI interaction issues
+
+---
+
+## ✨ Key Features
+
+### 🏋️ AI Trainer
+
+* Chat with AI fitness coach
+* Get workout advice and motivation
+
+### 📊 BMI Calculator + AI Suggestions
+
+* Calculate BMI instantly
+* Receive personalized AI health guidance
+
+### 🍽️ Meal Calculator
+
+* AI-based calorie and nutrition estimation
+
+### 📈 Dashboard
+
+* Track fitness activity and streaks
+* AI-generated improvement tips
+
+### 📚 Exercise Library
+
+* Explore exercises with AI-generated insights
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technology                |
+| -------- | ------------------------- |
+| Frontend | React, Vite, Tailwind CSS |
+| AI       | Google Gemini API         |
+| Backend  | Express (basic setup)     |
+| Database | Firebase                  |
+| Language | TypeScript                |
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/KanavPadha/FitStreak-AI.git
+cd FitStreak-AI
+```
+
+---
+
+### 2️⃣ Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+### 3️⃣ Setup Environment Variables
+
+Create a `.env` file in root:
+
+```env
+VITE_GEMINI_API_KEY=your_api_key_here
+```
+
+👉 Get API key from: https://aistudio.google.com/app/apikey
+
+---
+
+### 4️⃣ Run the Application
+
+```bash
+npm run dev
+```
+
+Open:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+ ├── components/
+ ├── data/
+ ├── lib/
+ ├── App.tsx
+ ├── main.tsx
+```
+
+---
+
+## 🚀 Future Enhancements
+
+* 🔐 Move AI calls to backend (secure API key)
+* 📊 Advanced analytics dashboard
+* 🤖 Personalized AI fitness plans
+* 📱 Fully responsive mobile design
+* 🌐 Production deployment
+
+---
+
+## 👨‍💻 Author
+
+**Kanav Padha**
+
+---
+
+## ⭐ Why This Project Stands Out
+
+* Combines **AI + Full Stack Development**
+* Demonstrates **real-world debugging skills**
+* Shows understanding of **LLM integration**
+* Built with **industry-relevant technologies**
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
