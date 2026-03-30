@@ -1,0 +1,194 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {uid}
+    // Fields:
+    //   - uid: string (required) - Firebase Auth UID
+    //   - displayName: string (optional) - User's display name
+    //   - email: string (required) - User's email
+    //   - photoURL: string (optional) - User's photo URL
+    //   - level: number (optional) - User's current level
+    //   - experience: number (optional) - User's current experience points
+    //   - createdAt: timestamp (optional) - Account creation timestamp
+    //
+    // Collection: workouts
+    // Document ID: {workoutId}
+    // Fields:
+    //   - userId: string (required) - UID of the user who performed the workout
+    //   - type: string (required) - Type of workout
+    //   - duration: number (required) - Duration in minutes
+    //   - calories: number (optional) - Calories burned
+    //   - date: timestamp (required) - When the workout occurred
+    //   - notes: string (optional) - Optional notes
+    //
+    // Collection: streaks
+    // Document ID: {userId}
+    // Fields:
+    //   - userId: string (required) - UID of the user
+    //   - currentStreak: number (required) - Current consecutive days
+    //   - longestStreak: number (required) - Longest consecutive days achieved
+    //   - lastActivityDate: timestamp (optional) - Last day an activity was logged
+    //
+    // Collection: badges
+    // Document ID: {badgeId}
+    // Fields:
+    //   - userId: string (required) - UID of the user
+    //   - badgeId: string (required) - Unique identifier for the badge type
+    //   - name: string (required) - Display name of the badge
+    //   - description: string (optional) - Description of how it was earned
+    //   - icon: string (optional) - Icon name or URL
+    //   - earnedAt: timestamp (required) - When the badge was earned
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isSystemAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.email == "kanavpadha225@gmail.com" && 
+             request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isSystemAdmin() || 
+             (isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // Domain Validators
+    
+    function isValidUser(data) {
+      return hasRequiredFields(['uid', 'email']) &&
+             data.uid == request.auth.uid &&
+             isValidEmail(data.email) &&
+             (data.displayName == null || (data.displayName is string && data.displayName.size() < 100)) &&
+             (data.level == null || data.level is number) &&
+             (data.experience == null || data.experience is number);
+    }
+
+    function isValidWorkout(data) {
+      return hasRequiredFields(['userId', 'type', 'duration', 'date']) &&
+             data.userId == request.auth.uid &&
+             data.type is string && data.type.size() > 0 && data.type.size() < 50 &&
+             data.duration is number && data.duration > 0 &&
+             data.date is timestamp;
+    }
+
+    function isValidStreak(data) {
+      return hasRequiredFields(['userId', 'currentStreak', 'longestStreak']) &&
+             data.userId == request.auth.uid &&
+             data.currentStreak is number && data.currentStreak >= 0 &&
+             data.longestStreak is number && data.longestStreak >= 0;
+    }
+
+    function isValidBadge(data) {
+      return hasRequiredFields(['userId', 'badgeId', 'name', 'earnedAt']) &&
+             data.userId is string &&
+             data.badgeId is string &&
+             data.name is string &&
+             data.earnedAt is timestamp;
+    }
+
+    function isValidMeal(data) {
+      return hasRequiredFields(['userId', 'name', 'protein', 'carbs', 'calories', 'date', 'mealTime']) &&
+             data.userId == request.auth.uid &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.protein is number && data.protein >= 0 &&
+             data.carbs is number && data.carbs >= 0 &&
+             data.calories is number && data.calories >= 0 &&
+             data.mealTime in ["Morning", "Afternoon", "Evening", "Night"] &&
+             data.date is timestamp;
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    match /users/{uid} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(uid) && isValidUser(request.resource.data);
+      allow update: if (isOwner(uid) && isValidUser(request.resource.data)) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /workouts/{workoutId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+      allow create: if isAuthenticated() && isValidWorkout(request.resource.data);
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && isValidWorkout(request.resource.data);
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+    }
+
+    match /streaks/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(userId) && isValidStreak(request.resource.data);
+      allow update: if (isOwner(userId) && isValidStreak(request.resource.data)) || isSystemAdmin() || isAdmin();
+    }
+
+    match /badges/{badgeId} {
+      allow read: if isAuthenticated();
+      allow create: if isSystemAdmin() || isAdmin(); // Only admins (or server-side logic) should create badges
+      allow update: if isSystemAdmin() || isAdmin();
+      allow delete: if isSystemAdmin() || isAdmin();
+    }
+
+    match /habits/{habitId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid && request.resource.data.name is string;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    match /alarms/{alarmId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    match /dailyGoals/{goalId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    match /meals/{mealId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+      allow create: if isAuthenticated() && isValidMeal(request.resource.data);
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && isValidMeal(request.resource.data);
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+    }
+
+    match /user_exercise_images/{exerciseId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+      allow create, update: if isAuthenticated() && request.resource.data.userId == request.auth.uid && request.resource.data.images is list;
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isSystemAdmin() || isAdmin());
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "displayName": { "type": "string", "description": "User's display name" },
+        "email": { "type": "string", "description": "User's email" },
+        "photoURL": { "type": "string", "description": "User's photo URL" },
+        "level": { "type": "integer", "description": "User's current level" },
+        "experience": { "type": "integer", "description": "User's current experience points" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account creation timestamp" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Workout": {
+      "title": "Workout",
+      "description": "Fitness activity log entry",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user who performed the workout" },
+        "type": { "type": "string", "description": "Type of workout (e.g., Running, Cycling, Strength)" },
+        "duration": { "type": "integer", "description": "Duration in minutes" },
+        "calories": { "type": "integer", "description": "Calories burned" },
+        "date": { "type": "string", "format": "date-time", "description": "When the workout occurred" },
+        "notes": { "type": "string", "description": "Optional notes" }
+      },
+      "required": ["userId", "type", "duration", "date"]
+    },
+    "Streak": {
+      "title": "Streak",
+      "description": "Daily streak tracking for a user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user" },
+        "currentStreak": { "type": "integer", "description": "Current consecutive days" },
+        "longestStreak": { "type": "integer", "description": "Longest consecutive days achieved" },
+        "lastActivityDate": { "type": "string", "format": "date-time", "description": "Last day an activity was logged" }
+      },
+      "required": ["userId", "currentStreak", "longestStreak"]
+    },
+    "Badge": {
+      "title": "Badge",
+      "description": "Gamification badge earned by a user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user" },
+        "badgeId": { "type": "string", "description": "Unique identifier for the badge type" },
+        "name": { "type": "string", "description": "Display name of the badge" },
+        "description": { "type": "string", "description": "Description of how it was earned" },
+        "icon": { "type": "string", "description": "Icon name or URL" },
+        "earnedAt": { "type": "string", "format": "date-time", "description": "When the badge was earned" }
+      },
+      "required": ["userId", "badgeId", "name", "earnedAt"]
+    },
+    "Habit": {
+      "title": "Habit",
+      "description": "Daily habit tracking",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user" },
+        "name": { "type": "string", "description": "Name of the habit" },
+        "completedDates": { "type": "array", "items": { "type": "string" }, "description": "List of dates (YYYY-MM-DD) when completed" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the habit was created" }
+      },
+      "required": ["userId", "name"]
+    },
+    "Alarm": {
+      "title": "Alarm",
+      "description": "User set reminders/alarms",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "time": { "type": "string", "description": "HH:mm format" },
+        "label": { "type": "string" },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["userId", "time", "label", "isActive"]
+    },
+    "DailyGoal": {
+      "title": "DailyGoal",
+      "description": "Specific goal for a specific day",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "date": { "type": "string", "description": "YYYY-MM-DD" },
+        "goal": { "type": "string" },
+        "isCompleted": { "type": "boolean" }
+      },
+      "required": ["userId", "date", "goal"]
+    },
+    "Meal": {
+      "title": "Meal",
+      "description": "User meal log with nutritional data",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "mealTime": { "type": "string", "enum": ["Morning", "Afternoon", "Evening", "Night"] },
+        "mealDetails": { "type": "string" },
+        "protein": { "type": "number" },
+        "carbs": { "type": "number" },
+        "calories": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "protein", "carbs", "calories", "date", "mealTime"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/workouts/{workoutId}": {
+      "schema": "Workout",
+      "description": "Workout log entries"
+    },
+    "/streaks/{userId}": {
+      "schema": "Streak",
+      "description": "User streak data"
+    },
+    "/badges/{badgeId}": {
+      "schema": "Badge",
+      "description": "User earned badges"
+    },
+    "/habits/{habitId}": {
+      "schema": "Habit",
+      "description": "User habits"
+    },
+    "/alarms/{alarmId}": {
+      "schema": "Alarm",
+      "description": "User alarms"
+    },
+    "/dailyGoals/{goalId}": {
+      "schema": "DailyGoal",
+      "description": "User daily goals"
+    },
+    "/meals/{mealId}": {
+      "schema": "Meal",
+      "description": "User meal logs"
+    }
+  }
+}

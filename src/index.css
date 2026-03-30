@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --bg: #0a0a0a;
+  --text: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-ghost: rgba(255, 255, 255, 0.2);
+  --card: #151515;
+  --accent: #3b82f6;
+  --accent-foreground: #ffffff;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(21, 21, 21, 0.8);
+}
+
+.light {
+  --bg: #f5f5f5;
+  --text: #000000;
+  --text-dim: rgba(0, 0, 0, 0.75);
+  --text-muted: rgba(0, 0, 0, 0.55);
+  --text-ghost: rgba(0, 0, 0, 0.35);
+  --card: #ffffff;
+  --accent: #2563eb;
+  --accent-foreground: #ffffff;
+  --muted: #e5e5e5;
+  --muted-foreground: #404040;
+  --border: rgba(0, 0, 0, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+}
+
+/* Automatic visibility fixes for Light Mode */
+.light .text-white\/80 { color: var(--text-dim); }
+.light .text-white\/70 { color: var(--text-dim); }
+.light .text-white\/60 { color: var(--text-dim); }
+.light .text-white\/40 { color: var(--text-muted); }
+.light .text-white\/20 { color: var(--text-ghost); }
+.light .text-white\/10 { color: var(--text-ghost); }
+.light .text-white { color: var(--text); }
+
+/* Ensure text on colored buttons remains white */
+.light .bg-blue-600 .text-white,
+.light .bg-blue-700 .text-white,
+.light .bg-red-600 .text-white,
+.light .bg-red-700 .text-white,
+.light .bg-green-600 .text-white,
+.light .bg-green-700 .text-white,
+.light .bg-orange-600 .text-white,
+.light .bg-orange-700 .text-white {
+  color: #ffffff !important;
+}
+
+.light .bg-white\/5 { background-color: rgba(0, 0, 0, 0.05); }
+.light .bg-white\/10 { background-color: rgba(0, 0, 0, 0.1); }
+.light .bg-black\/20 { background-color: rgba(0, 0, 0, 0.05); }
+.light .bg-black\/40 { background-color: rgba(0, 0, 0, 0.1); }
+.light .bg-black\/60 { background-color: rgba(0, 0, 0, 0.2); }
+.light .bg-black\/80 { background-color: rgba(0, 0, 0, 0.4); }
+
+.light .border-white\/5 { border-color: rgba(0, 0, 0, 0.1); }
+.light .border-white\/10 { border-color: rgba(0, 0, 0, 0.15); }
+.light .border-white\/20 { border-color: rgba(0, 0, 0, 0.2); }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.text-dim { color: var(--text-dim); }
+.text-muted-custom { color: var(--text-muted); }
+.text-ghost { color: var(--text-ghost); }
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.1);
+}
+
+.streak-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+}
